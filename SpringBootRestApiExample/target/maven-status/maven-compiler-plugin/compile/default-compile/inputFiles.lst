@@ -1,6 +1,7 @@
-/home/user/SpringBootWithAngular2/SpringBootRestApiExample/src/main/java/com/websystique/springboot/service/UserService.java
-/home/user/SpringBootWithAngular2/SpringBootRestApiExample/src/main/java/com/websystique/springboot/service/UserServiceImpl.java
-/home/user/SpringBootWithAngular2/SpringBootRestApiExample/src/main/java/com/websystique/springboot/SpringBootRestApiApp.java
-/home/user/SpringBootWithAngular2/SpringBootRestApiExample/src/main/java/com/websystique/springboot/controller/RestApiController.java
-/home/user/SpringBootWithAngular2/SpringBootRestApiExample/src/main/java/com/websystique/springboot/model/User.java
-/home/user/SpringBootWithAngular2/SpringBootRestApiExample/src/main/java/com/websystique/springboot/util/CustomErrorType.java
+/home/user/SpringBootWithAngular2Demo/SpringBootRestApiExample/src/main/java/com/websystique/springboot/service/UserService.java
+/home/user/SpringBootWithAngular2Demo/SpringBootRestApiExample/src/main/java/com/websystique/springboot/util/CustomErrorType.java
+/home/user/SpringBootWithAngular2Demo/SpringBootRestApiExample/src/main/java/com/websystique/springboot/service/UserDao.java
+/home/user/SpringBootWithAngular2Demo/SpringBootRestApiExample/src/main/java/com/websystique/springboot/model/User.java
+/home/user/SpringBootWithAngular2Demo/SpringBootRestApiExample/src/main/java/com/websystique/springboot/service/UserServiceImpl.java
+/home/user/SpringBootWithAngular2Demo/SpringBootRestApiExample/src/main/java/com/websystique/springboot/controller/RestApiController.java
+/home/user/SpringBootWithAngular2Demo/SpringBootRestApiExample/src/main/java/com/websystique/springboot/SpringBootRestApiApp.java

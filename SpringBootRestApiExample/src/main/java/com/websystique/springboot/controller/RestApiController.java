@@ -1,6 +1,6 @@
 package com.websystique.springboot.controller;
 
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.apache.commons.collections4.CollectionUtils;
 
 import com.websystique.springboot.model.User;
-import com.websystique.springboot.service.UserService;
+import com.websystique.springboot.service.UserDao;
 import com.websystique.springboot.util.CustomErrorType;
 
 @RestController
@@ -26,13 +27,18 @@ public class RestApiController {
 	public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
 	@Autowired
-	UserService userService; //Service which will do all data retrieval/manipulation work
+	UserDao userDao; //Service which will do all data retrieval/manipulation work
 
 	// -------------------Retrieve All Users---------------------------------------------
 
 	@RequestMapping(value = "/user/", method = RequestMethod.GET)
 	public ResponseEntity<List<User>> listAllUsers() {
-		List<User> users = userService.findAllUsers();
+
+		
+		Iterable iterable=userDao.findAll();
+		List<User> users = new ArrayList<User>();
+		CollectionUtils.addAll(users, iterable.iterator());
+		
 		if (users.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -45,7 +51,7 @@ public class RestApiController {
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getUser(@PathVariable("id") long id) {
 		logger.info("Fetching User with id {}", id);
-		User user = userService.findById(id);
+		User user = userDao.findById(id);
 		if (user == null) {
 			logger.error("User with id {} not found.", id);
 			return new ResponseEntity(new CustomErrorType("User with id " + id 
@@ -57,19 +63,11 @@ public class RestApiController {
 	// -------------------Create a User-------------------------------------------
 
 	@RequestMapping(value = "/user/", method = RequestMethod.POST)
-	public ResponseEntity<String> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<User> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
 		logger.info("Creating User : {}", user);
 
-		if (userService.isUserExist(user)) {
-			logger.error("Unable to create. A User with name {} already exist", user.getName());
-			return new ResponseEntity(new CustomErrorType("Unable to create. A User with name " + 
-			user.getName() + " already exist."),HttpStatus.CONFLICT);
-		}
-		userService.saveUser(user);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/user/{id}").buildAndExpand(user.getId()).toUri());
-		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+		userDao.save(user);
+		return new ResponseEntity<User>(user,HttpStatus.CREATED);
 	}
 
 	// ------------------- Update a User ------------------------------------------------
@@ -78,8 +76,8 @@ public class RestApiController {
 	public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody User user) {
 		logger.info("Updating User with id {}", id);
 
-		User currentUser = userService.findById(id);
-
+		User currentUser = userDao.findOne(id);
+		
 		if (currentUser == null) {
 			logger.error("Unable to update. User with id {} not found.", id);
 			return new ResponseEntity(new CustomErrorType("Unable to upate. User with id " + id + " not found."),
@@ -90,7 +88,7 @@ public class RestApiController {
 		currentUser.setAge(user.getAge());
 		currentUser.setSalary(user.getSalary());
 
-		userService.updateUser(currentUser);
+		 userDao.save(currentUser);
 		return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 	}
 
@@ -99,24 +97,7 @@ public class RestApiController {
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
 		logger.info("Fetching & Deleting User with id {}", id);
-
-		User user = userService.findById(id);
-		if (user == null) {
-			logger.error("Unable to delete. User with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. User with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		}
-		userService.deleteUserById(id);
-		return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-	}
-
-	// ------------------- Delete All Users-----------------------------
-
-	@RequestMapping(value = "/user/", method = RequestMethod.DELETE)
-	public ResponseEntity<User> deleteAllUsers() {
-		logger.info("Deleting All Users");
-
-		userService.deleteAllUsers();
+		userDao.delete(id);
 		return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
 	}
 
