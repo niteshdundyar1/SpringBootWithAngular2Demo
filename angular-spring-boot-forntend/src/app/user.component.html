@@ -1,0 +1,27 @@
+<div>
+	<label>Name:</label>   <input type="text" id="name" name="name" [(ngModel)]="userModel.name"/>  
+	<label>Age:</label><input type="text" id="age" name="age" [(ngModel)]="userModel.age" /><br>
+	<label>Salary:</label><input type="text" id="salary" name="salary" [(ngModel)]="userModel.salary" /><br>
+        <button (click)="addUser()">Save</button>
+        <button (click)="getUsers()">GET</button>
+</div>
+
+<div *ngIf="isGet">
+    <div *ngFor="let user of users" >
+     	  <span>Id: {{user.id}} |</span><span>Name: {{user.name}} |</span>
+     	  <span>Age: {{user.age}} |</span><span>Salary: {{user.salary}}</span>
+     	  <button (click)="deleteUser(user.id)">Delete</button>
+     	  <button (click)="editUser(user)">Edit</button>
+
+    </div>
+</div>
+
+<div *ngIf="isEdited">
+	<input type="hidden" id="id" name="id" [(ngModel)]="updateUserModel.uid"/> 
+	<label>Name:</label><input type="text" id="name" name="name" [(ngModel)]="updateUserModel.name"/>  
+	<label>Age:</label><input type="text" id="age" name="age" [(ngModel)]="updateUserModel.age" /><br>
+	<label>Salary:</label><input type="text" id="salary" name="salary" [(ngModel)]="updateUserModel.salary" /><br>
+        <button (click)="updateUser()">Update</button>
+</div>
+
+    
